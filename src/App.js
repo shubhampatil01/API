@@ -11,12 +11,12 @@ function App() {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch("https://swapi.dev/api/films/");
-      const data = await response.json();
-
+      const response = await fetch("https://swapi.dev/api/film/");
       if (!response.ok) {
         throw new Error("Something went wrong");
       }
+
+      const data = await response.json();
 
       const transformedMovies = data.results.map((movieData) => {
         return {
