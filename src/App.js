@@ -88,7 +88,7 @@ function App() {
       </section>
       <section>
         {content}
-        {movies < 1 && <button onClick={removeMovieHandler}>Delete</button>}
+        <button onClick={removeMovieHandler}>Delete</button>
       </section>
     </React.Fragment>
   );
