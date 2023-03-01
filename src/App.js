@@ -56,7 +56,20 @@ function App() {
     const data = await response.json();
     console.log(data);
   }
-  async function removeMovieHandler
+  async function removeMovieHandler(movie) {
+    const response = fetch(
+      "https://react-api-8342e-default-rtdb.firebaseio.com/movies.json",
+      {
+        method: "DELETE",
+        body: JSON.stringify(movie.name),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+  }
   let content = <p>Found no movies</p>;
   if (movies.length > 0) {
     content = <MoviesList movies={movies} />;
@@ -75,7 +88,7 @@ function App() {
       </section>
       <section>
         {content}
-        <button>Delete</button>
+        {movies < 1 && <button onClick={removeMovieHandler}>Delete</button>}
       </section>
     </React.Fragment>
   );
