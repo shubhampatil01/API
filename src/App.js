@@ -13,22 +13,26 @@ function App() {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch("https://swapi.dev/api/films/");
+      const response = await fetch(
+        "https://react-api-8342e-default-rtdb.firebaseio.com/movies.json"
+      );
       if (!response.ok) {
         throw new Error("Something went wrong");
       }
 
       const data = await response.json();
 
-      const transformedMovies = data.results.map((movieData) => {
-        return {
-          id: movieData.episode_id,
-          title: movieData.title,
-          openingText: movieData.opening_crawl,
-          releaseDate: movieData.release_date,
-        };
-      });
-      setMovies(transformedMovies);
+      const loadedMovies = [];
+
+      for (const key in data)
+        loadedMovies.push({
+          id: key,
+          title: data[key].title,
+          openingText: data[key].openingText,
+          releaseDate: data[key].releaseDate,
+        });
+
+      setMovies(loadedMovies);
     } catch (error) {
       setError(error.message);
     }
@@ -38,9 +42,21 @@ function App() {
     fetchMoviesHandler();
   }, [fetchMoviesHandler]);
 
-  const addMovieHandler = (movie) => {
-    console.log(movie);
-  };
+  async function addMovieHandler(movie) {
+    const response = fetch(
+      "https://react-api-8342e-default-rtdb.firebaseio.com/movies.json",
+      {
+        method: "POST",
+        body: JSON.stringify(movie),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+  }
+  async function removeMovieHandler
   let content = <p>Found no movies</p>;
   if (movies.length > 0) {
     content = <MoviesList movies={movies} />;
@@ -57,7 +73,10 @@ function App() {
         <AddMovie onAddMovie={addMovieHandler} />
         <button onClick={fetchMoviesHandler}>Fetch Movies</button>
       </section>
-      <section>{content}</section>
+      <section>
+        {content}
+        <button>Delete</button>
+      </section>
     </React.Fragment>
   );
 }
